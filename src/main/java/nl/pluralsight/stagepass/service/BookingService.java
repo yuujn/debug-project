@@ -41,6 +41,10 @@ public class BookingService {
         Concert concert = concertRepository.findById(booking.getConcert().getId())
                 .orElseThrow(() -> new RuntimeException("Concert not found"));
 
+        // Update the number of available seats with a concert.
+        concert.setAvailableSeats(concert.getAvailableSeats() - booking.getNumberOfTickets());
+        concert = concertRepository.save(concert);
+
         // Compute total price
         booking.setTotalPrice(BigDecimal.ZERO);
 
