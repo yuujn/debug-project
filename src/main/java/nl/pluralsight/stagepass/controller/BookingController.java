@@ -5,6 +5,7 @@ import nl.pluralsight.stagepass.model.Booking;
 import nl.pluralsight.stagepass.service.BookingService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.util.List;
 
@@ -38,7 +39,12 @@ public class BookingController {
     @PostMapping
     public ResponseEntity<Booking> createBooking(@RequestBody Booking booking) {
         Booking created = bookingService.createBooking(booking);
-        return ResponseEntity.ok(created);
+        return ResponseEntity.created(
+                ServletUriComponentsBuilder.fromCurrentRequest()
+                        .path("/{id}")
+                        .buildAndExpand(created.getId())
+                        .toUri()
+        ).build();
     }
 
     @DeleteMapping("/{id}")
